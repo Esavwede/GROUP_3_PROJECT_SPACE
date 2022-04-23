@@ -4,7 +4,8 @@
   "description": "this is our capstone project",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "start:dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/Esavwede/GROUP_3_PROJECT_SPACE/issues"
   },
-  "homepage": "https://github.com/Esavwede/GROUP_3_PROJECT_SPACE#readme"
+  "homepage": "https://github.com/Esavwede/GROUP_3_PROJECT_SPACE#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
 }
