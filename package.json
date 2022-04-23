@@ -1,0 +1,19 @@
+{
+  "name": "group_3_project_space",
+  "version": "1.0.0",
+  "description": "this is our capstone project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Esavwede/GROUP_3_PROJECT_SPACE.git"
+  },
+  "author": "gharras",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Esavwede/GROUP_3_PROJECT_SPACE/issues"
+  },
+  "homepage": "https://github.com/Esavwede/GROUP_3_PROJECT_SPACE#readme"
+}
