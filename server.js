@@ -5,7 +5,7 @@
 
 
 const os = require('os') // Os Module for Os properties
-
+const fs = require('fs') // File System module
 
 
 
@@ -16,7 +16,7 @@ const os = require('os') // Os Module for Os properties
           // IF TRUE
               // RETURN A RESPONSE WITH CODE 201, MEANING FILE HAS BEEN created
           // IF FALSE
-              // RETURN A RESPONSE WITH CODE 500, MEANING ERROR FROM SERVER DURING FILE CREATING 
+              // RETURN A RESPONSE WITH CODE 500, MEANING ERROR FROM SERVER DURING FILE CREATING
 
 // Function to get and set os info
 async function getAndSetOsInfo()
@@ -32,6 +32,8 @@ async function getAndSetOsInfo()
 
   // GET AND SET OS INFORMATION
 
+try
+{
   // HOSTNAME
   const hostname =   await os.hostname() // get
   os_info_data.hostname = hostname // set
@@ -58,6 +60,12 @@ async function getAndSetOsInfo()
   const uptime =   await os.uptime() // get
   os_info_data.uptime = uptime // set
 
+} catch (e) // IF ERROR OCCURS WHILE GETTING SYSTEM INFORMATION
+{
+    console.log(` Error occured while getting Os Information \n #Error: ${e}`)
+    return false
+}
+
   // Log
   console.log(' Writing os info to file ')
 
@@ -75,7 +83,6 @@ os_info_data = JSON.stringify(os_info_data)
 
     // OS INFO FILE CREATED SUCCESSFULLY
     // RETURNS -TRUE-
-
     console.log(' Os info file created successfully ')
       return true
   })
