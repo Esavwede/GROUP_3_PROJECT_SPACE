@@ -6,9 +6,11 @@
 
 const os = require('os') // Os Module for Os properties
 const fs = require('fs') // File System module
+const http = require('http')
+const { Console } = require('console');
+const { isAbsolute } = require('path');
 
-
-
+const port = 3000;
 
 // HOW TO USE THIS FUNCTION
     // CALL getAndSetOsInfo() FROM THE /SYS ROUTE
@@ -37,6 +39,7 @@ try
   // HOSTNAME
   const hostname =   await os.hostname() // get
   os_info_data.hostname = hostname // set
+  
 
   // PLATFORM
   const platform =   await os.platform() // get
@@ -89,3 +92,64 @@ os_info_data = JSON.stringify(os_info_data)
 
 
 }
+
+const server = http.createServer((request, response) => {
+  // Console.log any error that occurs when the request was made
+  request.on('error', (err) => {
+    console.log('An error ocurred')
+  })
+
+  // Console.log any error that occurs when the response was made
+  response.on('error', (err) => {
+    console.log('An error ocurred')
+  })
+
+  // set request.url to const urlPath for fast access
+  const urlPath = request.url
+
+  // Check if the urlPath == '/'. If true, load the index.html page
+  if (urlPath == '/')
+  {
+    response.writeHead(200, {'Content-Type': 'text/html'})
+    const data = fs.readFileSync('./pages/index.html')
+
+    response.write(data)
+    response.end()
+  }
+
+  // Else check if urlPath == '/about.html'. If true, load the about.html page
+  else if (urlPath == '/about')
+  {
+    response.writeHead(200, {'Content-Type': 'text/html'})
+    const data = fs.readFileSync('./pages/about.html')
+
+    response.write(data)
+    response.end()
+  }
+
+  // Else check if urlPath == '/sys'. If true, load the your os info has been saved successfully back to the user
+  else if (urlPath == '/sys')
+  {
+    response.writeHead(201, {'Content-Type': 'text/plain'})
+
+    response.write('Your os info has been saved successfully')
+    getAndSetOsInfo()
+    response.end()
+  }
+
+  // Else, load the 404.html page
+  else
+  {
+    response.writeHead(404, {'Content-Type': 'text/html'})
+    const data = fs.readFileSync('./pages/404.html')
+
+    response.write(data)
+    response.end()
+  }
+
+})
+
+
+server.listen(port, () => {
+  console.log(`This server is listening at port:${port}`)
+})
