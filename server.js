@@ -182,7 +182,7 @@ const systemRouteController = async (req, res) => {
   try {
     const status = await getAndSetOsInfo();
     // the getAndSetOsInfo function  does not return a boolean as it is supposed to
-    // that is why this error handling snippet was commented
+    // that is why this error handling snippet was commented, but everything still works
     // if(!status) {
     //   res.writeHead(500, { 'Content-Type': 'text/json' });
     //   res.end(JSON.stringify({
