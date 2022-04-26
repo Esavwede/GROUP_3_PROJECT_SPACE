@@ -96,24 +96,23 @@ const homeRouteController = async (req, res) => {
 
   try {
     // read the html page
-    await fs.readFile('./pages/index.html', (err, page) => {
+    fs.readFile('./pages/index.html', (err, page) => {
       if(err) { // if any error occurs during reading the file
         res.writeHead(500, { 'Content-Type': 'text/plain' });
         res.end('internal server error');
+        return;
       }
       // if no error occurs send the file
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.write(page);
       res.end()
+      return;
     });
 
   } catch (error) { // if any unforseen error occurs
-    res.writeHead(500, { 'Content-Type': 'text/json' });
-    res.end(JSON.stringify({
-      message: 'an error occured',
-      error
-    }));
-
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end(`an error occured : ${error}`);
+    return;
   }
 
 }
@@ -122,27 +121,23 @@ const homeRouteController = async (req, res) => {
 const aboutRouteController = async (req, res) => {
 
   try {
-    await fs.readFile('./pages/about.html', (err, page) => {
+    fs.readFile('./pages/about.html', (err, page) => {
       if(err) { // if any error occurs during reading the file
-        res.writeHead(500, { 'Content-Type': 'text/json' });
-        res.end(JSON.stringify({
-          message: 'internal server error',
-          error: err
-        }));
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end(`internal server error ; ${err}`);
+        return;
       }
       // if no error occurs send the file
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.write(page);
       res.end()
+      return;
     });
 
   } catch (error) { // if any unforseen error occurs
-    res.writeHead(500, { 'Content-Type': 'text/json' });
-    res.end(JSON.stringify({
-      message: 'an error occured',
-      error
-    }));
-
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end(`an error occured : ${error}`);
+    return;
   }
 
 }
@@ -151,27 +146,23 @@ const aboutRouteController = async (req, res) => {
 const errorRouteController = async (req, res) => {
 
   try {
-    await fs.readFile('./pages/404.html', (err, page) => {
+    fs.readFile('./pages/404.html', (err, page) => {
       if(err) { // if any error occurs during reading the file
-        res.writeHead(500, { 'Content-Type': 'text/json' });
-        res.end(JSON.stringify({
-          message: 'internal server error',
-          error: err
-        }));
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end(`internal server error : ${err}`);
+        return;
       }
       // if no error occurs send the file
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.write(page);
-      res.end()
+      res.end();
+      return;
     });
 
   } catch (error) { // if any unforseen error occurs
-    res.writeHead(500, { 'Content-Type': 'text/json' });
-    res.end(JSON.stringify({
-      message: 'an error occured',
-      error
-    }));
-
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end(`an error occured : ${error}`);
+    return;
   }
 
 }
@@ -184,32 +175,27 @@ const systemRouteController = async (req, res) => {
     // the getAndSetOsInfo function  does not return a boolean as it is supposed to
     // that is why this error handling snippet was commented, but everything still works
     // if(!status) {
-    //   res.writeHead(500, { 'Content-Type': 'text/json' });
-    //   res.end(JSON.stringify({
-    //     message: 'an error occured while reading os info'
-    //   }));
+    //   res.writeHead(500, { 'Content-Type': 'text/plain' });
+    //   res.end('an error occured while reading os info');
+    //   return;
     // }
-    await fs.readFile('./osinfo.json', (err, page) => {
+    fs.readFile('./osinfo.json', (err, page) => {
       if(err) { // if any error occurs during reading the file
-        res.writeHead(500, { 'Content-Type': 'text/json' });
-        res.end(JSON.stringify({
-          message: 'internal server error',
-          error: err
-        }));
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end(`internal server error : ${err}`);
+        return;
       }
       // if no error occurs send the file
       res.writeHead(200, { 'Content-Type': 'text/json' });
       res.write(page);
-      res.end()
+      res.end();
+      return;
     });
 
   } catch (error) { // if any unforseen error occurs
-    res.writeHead(500, { 'Content-Type': 'text/json' });
-    res.end(JSON.stringify({
-      message: 'an error occured',
-      error
-    }));
-
+    res.writeHead(500, { 'Content-Type': 'text/plain' });
+    res.end(`an error occured : ${error}`);
+    return;
   }
 
 }
