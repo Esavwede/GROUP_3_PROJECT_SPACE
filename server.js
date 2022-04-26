@@ -6,6 +6,7 @@
 
 const os = require('os') // Os Module for Os properties
 const fs = require('fs') // File System module
+const http = require('http')
 
 
 
@@ -89,3 +90,151 @@ os_info_data = JSON.stringify(os_info_data)
 
 
 }
+
+
+const homeRouteController = async (req, res) => {
+
+  try {
+    await fs.readFile('./pages/index.html', (err, page) => {
+      if(err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        res.end('internal server error');
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.write(page);
+      res.end()
+    });
+
+  } catch (error) {
+
+    res.writeHead(500, { 'Content-Type': 'text/json' });
+    res.end(JSON.stringify({
+      message: 'an error occured',
+      error
+    }));
+
+  }
+
+}
+
+const aboutRouteController = async (req, res) => {
+
+  try {
+    await fs.readFile('./pages/about.html', (err, page) => {
+      if(err) {
+        res.writeHead(500, { 'Content-Type': 'text/json' });
+        res.end(JSON.stringify({
+          message: 'internal server error',
+          error: err
+        }));
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.write(page);
+      res.end()
+    });
+
+  } catch (error) {
+
+    res.writeHead(500, { 'Content-Type': 'text/json' });
+    res.end(JSON.stringify({
+      message: 'an error occured',
+      error
+    }));
+
+  }
+
+}
+
+const errorRouteController = async (req, res) => {
+
+  try {
+    await fs.readFile('./pages/404.html', (err, page) => {
+      if(err) {
+        res.writeHead(500, { 'Content-Type': 'text/json' });
+        res.end(JSON.stringify({
+          message: 'internal server error',
+          error: err
+        }));
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.write(page);
+      res.end()
+    });
+
+  } catch (error) {
+
+    res.writeHead(500, { 'Content-Type': 'text/json' });
+    res.end(JSON.stringify({
+      message: 'an error occured',
+      error
+    }));
+
+  }
+
+}
+
+const systemRouteController = async (req, res) => {
+
+  try {
+    const status = await getAndSetOsInfo();
+    console.log('status  : ' + status)
+    // if(!status) {
+    //   res.writeHead(500, { 'Content-Type': 'text/json' });
+    //   res.end(JSON.stringify({
+    //     message: 'an error occured while reading os info'
+    //   }));
+    // }
+    await fs.readFile('./osinfo.json', (err, page) => {
+      if(err) {
+        res.writeHead(500, { 'Content-Type': 'text/json' });
+        res.end(JSON.stringify({
+          message: 'internal server error',
+          error: err
+        }));
+      }
+      res.writeHead(200, { 'Content-Type': 'text/json' });
+      res.write(page);
+      res.end()
+    });
+
+  } catch (error) {
+
+    res.writeHead(500, { 'Content-Type': 'text/json' });
+    res.end(JSON.stringify({
+      message: 'an error occured',
+      error
+    }));
+
+  }
+
+}
+
+const Router = ( req, res ) => {
+  switch(req.url) {
+
+    case '/':
+      homeRouteController(req, res);
+      break;
+
+    case '/about':
+      aboutRouteController(req, res);
+      break;
+
+    case '/sys':
+      systemRouteController(req, res);
+      break;
+
+    default:
+      errorRouteController(req, res);
+      break;
+
+  }
+}
+
+const PORT = 5000;
+http.createServer(( req, res) => {
+  Router(req, res);
+}).listen( PORT, () => {
+  console.log(`server started on port ${PORT}`)
+});
+
