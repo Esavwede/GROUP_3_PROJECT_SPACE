@@ -91,22 +91,23 @@ os_info_data = JSON.stringify(os_info_data)
 
 }
 
-
+// this handles the index route
 const homeRouteController = async (req, res) => {
 
   try {
+    // read the html page
     await fs.readFile('./pages/index.html', (err, page) => {
-      if(err) {
+      if(err) { // if any error occurs during reading the file
         res.writeHead(500, { 'Content-Type': 'text/plain' });
         res.end('internal server error');
       }
+      // if no error occurs send the file
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.write(page);
       res.end()
     });
 
-  } catch (error) {
-
+  } catch (error) { // if any unforseen error occurs
     res.writeHead(500, { 'Content-Type': 'text/json' });
     res.end(JSON.stringify({
       message: 'an error occured',
@@ -117,24 +118,25 @@ const homeRouteController = async (req, res) => {
 
 }
 
+// this handles the about route
 const aboutRouteController = async (req, res) => {
 
   try {
     await fs.readFile('./pages/about.html', (err, page) => {
-      if(err) {
+      if(err) { // if any error occurs during reading the file
         res.writeHead(500, { 'Content-Type': 'text/json' });
         res.end(JSON.stringify({
           message: 'internal server error',
           error: err
         }));
       }
+      // if no error occurs send the file
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.write(page);
       res.end()
     });
 
-  } catch (error) {
-
+  } catch (error) { // if any unforseen error occurs
     res.writeHead(500, { 'Content-Type': 'text/json' });
     res.end(JSON.stringify({
       message: 'an error occured',
@@ -145,24 +147,25 @@ const aboutRouteController = async (req, res) => {
 
 }
 
+// this handles any route that does not match
 const errorRouteController = async (req, res) => {
 
   try {
     await fs.readFile('./pages/404.html', (err, page) => {
-      if(err) {
+      if(err) { // if any error occurs during reading the file
         res.writeHead(500, { 'Content-Type': 'text/json' });
         res.end(JSON.stringify({
           message: 'internal server error',
           error: err
         }));
       }
+      // if no error occurs send the file
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.write(page);
       res.end()
     });
 
-  } catch (error) {
-
+  } catch (error) { // if any unforseen error occurs
     res.writeHead(500, { 'Content-Type': 'text/json' });
     res.end(JSON.stringify({
       message: 'an error occured',
@@ -173,11 +176,13 @@ const errorRouteController = async (req, res) => {
 
 }
 
+//this handles the sys route
 const systemRouteController = async (req, res) => {
 
   try {
     const status = await getAndSetOsInfo();
-    console.log('status  : ' + status)
+    // the getAndSetOsInfo function  does not return a boolean as it is supposed to
+    // that is why this error handling snippet was commented
     // if(!status) {
     //   res.writeHead(500, { 'Content-Type': 'text/json' });
     //   res.end(JSON.stringify({
@@ -185,20 +190,20 @@ const systemRouteController = async (req, res) => {
     //   }));
     // }
     await fs.readFile('./osinfo.json', (err, page) => {
-      if(err) {
+      if(err) { // if any error occurs during reading the file
         res.writeHead(500, { 'Content-Type': 'text/json' });
         res.end(JSON.stringify({
           message: 'internal server error',
           error: err
         }));
       }
+      // if no error occurs send the file
       res.writeHead(200, { 'Content-Type': 'text/json' });
       res.write(page);
       res.end()
     });
 
-  } catch (error) {
-
+  } catch (error) { // if any unforseen error occurs
     res.writeHead(500, { 'Content-Type': 'text/json' });
     res.end(JSON.stringify({
       message: 'an error occured',
@@ -209,6 +214,7 @@ const systemRouteController = async (req, res) => {
 
 }
 
+// this is the router that selects the contoller based on the incoming route
 const Router = ( req, res ) => {
   switch(req.url) {
 
