@@ -7,10 +7,28 @@
 const os = require('os') // Os Module for Os properties
 const fs = require('fs') // File System module
 const http = require('http')
-const { Console } = require('console');
-const { isAbsolute } = require('path');
 
 const port = 3000;
+
+
+// Function for getting and sending html pages as responses
+// Takes the filePath, error message if the file cannot be served and the response object
+function sendHtmlPagesResponse(filePath, fileErrorMessage, response)
+{
+  fs.readFile(filePath, (err, data) => {
+    if (err)
+    {
+      console.log(fileErrorMessage);
+      console.log(`Error: ${err}`)
+      response.writeHead(500, {'Content-Type': 'text/plain'})
+      return response.end('Error occured while loading page')
+    }
+
+    response.writeHead(200, {'Content-Type': 'text/html'})
+    return response.end(data)
+  })
+}
+
 
 // HOW TO USE THIS FUNCTION
     // CALL getAndSetOsInfo() FROM THE /SYS ROUTE
@@ -19,6 +37,7 @@ const port = 3000;
               // RETURN A RESPONSE WITH CODE 201, MEANING FILE HAS BEEN created
           // IF FALSE
               // RETURN A RESPONSE WITH CODE 500, MEANING ERROR FROM SERVER DURING FILE CREATING
+
 
 // Function to get and set os info
 async function getAndSetOsInfo()
@@ -110,41 +129,53 @@ const server = http.createServer((request, response) => {
   // Check if the urlPath == '/'. If true, load the index.html page
   if (urlPath == '/')
   {
-    response.writeHead(200, {'Content-Type': 'text/html'})
-    const data = fs.readFileSync('./pages/index.html')
-
-    response.write(data)
-    response.end()
+    sendHtmlPagesResponse('./pages/index.html', 'Error ocurred while loading the page', response)
   }
 
   // Else check if urlPath == '/about.html'. If true, load the about.html page
   else if (urlPath == '/about')
   {
-    response.writeHead(200, {'Content-Type': 'text/html'})
-    const data = fs.readFileSync('./pages/about.html')
-
-    response.write(data)
-    response.end()
+    sendHtmlPagesResponse('./pages/about.html', 'Error ocurred while loading the page', response)
   }
 
   // Else check if urlPath == '/sys'. If true, load the your os info has been saved successfully back to the user
   else if (urlPath == '/sys')
   {
-    response.writeHead(201, {'Content-Type': 'text/plain'})
+    const success = getAndSetOsInfo()
+    if (success)
+    {
+      response.writeHead(201, {'Content-Type': 'text/plain'})
 
-    response.write('Your os info has been saved successfully')
-    getAndSetOsInfo()
-    response.end()
+      return response.end('Your os info has been saved successfully')
+    }
+
+    else
+    {
+      response.writeHead(500, {'Content-Type': 'text/plain'})
+
+      return response.end('Error occured while fetching os info')
+      
+    }
+    
   }
 
   // Else, load the 404.html page
   else
   {
-    response.writeHead(404, {'Content-Type': 'text/html'})
-    const data = fs.readFileSync('./pages/404.html')
+    fs.readFile('./pages/404.html', (err, data) => {
+      if (err)
+      {
+        console.log('Error ocurred while fetching error page')
+        response.writeHead(500, {'Content-Type': 'text/plain'})
+        return response.end('Error ocurred while fetching page')
+      }
 
-    response.write(data)
-    response.end()
+      else
+      {
+        response.writeHead(404, {'Content-Type': 'text/html'})
+        return response.end(data)
+      }
+    })
   }
 
 })
